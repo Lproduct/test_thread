@@ -7,6 +7,8 @@
 #include "mythread.h"
 #include "calibrationwindow.h"
 #include "displaycalibwin.h"
+#include "config.h"
+#include "tools.h"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -25,6 +27,8 @@ public:
     MyThread* mThread;
     CalibrationWindow* calibWin;
     DisplayCalibWin* disCalWin;
+    Config* confData;
+    Tools* toolsWin;
 
 public slots:
     void onImageChangedCV(cv::Mat imageCV);
@@ -37,6 +41,8 @@ private slots:
     void setTextBallCoordinate(QString txt);
     void on_pushButtonCalib_clicked();
     void winCalibQuit();
+    void setComboBoxConf();
+    void setConfigObjDetect(int index);
 
 signals:
 

@@ -14,9 +14,9 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,1,0" columnstretch="1,0" columnminimumwidth="0,0">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,1" columnstretch="1" columnminimumwidth="0">
     <item row="1" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,1,0,0">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,1,1,0,0,0,0">
       <item>
        <widget class="QPushButton" name="pushButtonGetImage">
         <property name="text">
@@ -47,6 +47,9 @@
          <string>OpenCV Camera View</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBoxObjectConf"/>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -93,6 +96,24 @@
         </item>
        </layout>
       </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonTools">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="image.qrc">
+          <normaloff>:/image/service-512.png</normaloff>:/image/service-512.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonCalib">
+        <property name="text">
+         <string>Calibration</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item row="2" column="0">
@@ -112,27 +133,12 @@
       </item>
      </layout>
     </item>
-    <item row="2" column="1">
-     <widget class="QPlainTextEdit" name="plainTextEditBallCoord">
-      <property name="maximumSize">
-       <size>
-        <width>100</width>
-        <height>16777215</height>
-       </size>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QPushButton" name="pushButtonCalib">
-      <property name="text">
-       <string>Calibration</string>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="image.qrc"/>
+ </resources>
  <connections/>
 </ui>

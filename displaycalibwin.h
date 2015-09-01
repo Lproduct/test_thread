@@ -2,6 +2,7 @@
 #define DISPLAYCALIBWIN_H
 
 #include <QMainWindow>
+#include <QImage>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -25,7 +26,7 @@ private:
     Ui::DisplayCalibWin *ui;
     QImage cvMatToQImage( const cv::Mat &inMat );
 
-    cv::Mat qimgOriginal;
+    QImage qimgOriginal;
 };
 
 #endif // DISPLAYCALIBWIN_H

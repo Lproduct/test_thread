@@ -29,11 +29,16 @@ public slots:
     void setS_MAX(int value);
     void setV_MAX(int value);
     void setCalibrationMode(bool state);
+    void setHSVobjMax(Scalar config);
+    void setHSVobjMin(Scalar config);
+    void setObjColor(Scalar config);
+    void setObjType(std::string type);
 
 signals:
     void imageChange(unsigned char*);
     void imageChangeCV(cv::Mat);
     void ballCoordinate(QString);
+    void imageChangeThreshold(cv::Mat);
 
 private:
     cv::Mat QImageToCvMat( const QImage &inImage, bool inCloneImageData = true );
@@ -66,6 +71,8 @@ private:
     int H_MAX;
     int S_MAX;
     int V_MAX;
+
+    Object objdetect;
 
     bool calibrationMode;
 };

@@ -44,7 +44,10 @@ MyThread::MyThread(QObject *parent) : QThread(parent)
     H_MAX = 0;
     S_MAX = 0;
     V_MAX = 0;
-    namedWindow( "Thresholded Image", WINDOW_AUTOSIZE );
+
+    objdetect.setColor(Scalar(0,0,0));
+    objdetect.setHSVmax(Scalar(0,0,0));
+    objdetect.setHSVmin(Scalar(0,0,0));
 }
 
 void MyThread::run()
@@ -290,7 +293,8 @@ cv::Mat MyThread::imageProcessing(cv::Mat &image)
         cvtColor(imageAB,HSV,COLOR_BGR2HSV);
         inRange(HSV,Scalar(H_MIN,S_MIN,V_MIN),Scalar(H_MAX,S_MAX,V_MAX),threshold);
         morphOps(threshold);
-        imshow("Thresholded Image",threshold);
+        //imshow("Thresholded Image",threshold);
+        emit imageChangeThreshold(threshold);
 
         //the folowing for canny edge detec
         /// Create a matrix of the same type and size as src (for dst)
@@ -299,19 +303,19 @@ cv::Mat MyThread::imageProcessing(cv::Mat &image)
         cvtColor( src, src_gray, CV_BGR2GRAY );
 
         /// Show the image
-        Object none("none");
-        trackFilteredObject(none,threshold,HSV,imageAB);
+        Object calib("calib");
+        trackFilteredObject(calib,threshold,HSV,imageAB);
     }
     else
     {
         cvtColor(imageAB,HSV,COLOR_BGR2HSV);
 
-        Object blue("blue");
+        //Object blue("blue");
         //first find blue objects
         cvtColor(imageAB,HSV,COLOR_BGR2HSV);
-        inRange(HSV,blue.getHSVmin(),blue.getHSVmax(),threshold);
+        inRange(HSV,objdetect.getHSVmin(),objdetect.getHSVmax(),threshold);
         morphOps(threshold);
-        trackFilteredObject(blue,threshold,HSV,imageAB);
+        trackFilteredObject(objdetect,threshold,HSV,imageAB);
     }
 
     /////////////////////////////////////
@@ -477,6 +481,38 @@ void MyThread::setCalibrationMode(bool state)
     QMutex mutex;
     mutex.lock();
     calibrationMode = state;
+    mutex.unlock();
+}
+
+void MyThread::setHSVobjMax(Scalar config)
+{
+    QMutex mutex;
+    mutex.lock();
+    objdetect.setHSVmax(config);
+    mutex.unlock();
+}
+
+void MyThread::setHSVobjMin(Scalar config)
+{
+    QMutex mutex;
+    mutex.lock();
+    objdetect.setHSVmin(config);
+    mutex.unlock();
+}
+
+void MyThread::setObjColor(Scalar config)
+{
+    QMutex mutex;
+    mutex.lock();
+    objdetect.setColor(config);
+    mutex.unlock();
+}
+
+void MyThread::setObjType(std::string type)
+{
+    QMutex mutex;
+    mutex.lock();
+    objdetect.setType(type);
     mutex.unlock();
 }
 

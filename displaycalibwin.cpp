@@ -1,6 +1,7 @@
 #include "displaycalibwin.h"
 #include "ui_displaycalibwin.h"
 #include <QImage>
+#include <QDebug>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -21,6 +22,7 @@ void DisplayCalibWin::displayImage(cv::Mat imageCV)
 {
     qimgOriginal = cvMatToQImage(imageCV);
     ui->labelImageDisplay->setPixmap(QPixmap::fromImage(qimgOriginal));
+    ui->labelImageDisplay->setScaledContents(true);
 }
 
 QImage DisplayCalibWin::cvMatToQImage( const cv::Mat &inMat )

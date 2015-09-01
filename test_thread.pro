@@ -18,18 +18,23 @@ SOURCES += main.cpp\
     threadic.cpp \
     Object.cpp \
     calibrationwindow.cpp \
-    displaycalibwin.cpp
+    displaycalibwin.cpp \
+    config.cpp \
+    tools.cpp
 
 HEADERS  += mainwindow.h \
     mythread.h \
     threadic.h \
     Object.h \
     calibrationwindow.h \
-    displaycalibwin.h
+    displaycalibwin.h \
+    config.h \
+    tools.h
 
 FORMS    += mainwindow.ui \
     calibrationwindow.ui \
-    displaycalibwin.ui
+    displaycalibwin.ui \
+    tools.ui
 
 INCLUDEPATH += C:\\mvIMPACT_Acquire
 

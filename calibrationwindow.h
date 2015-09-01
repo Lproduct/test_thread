@@ -23,6 +23,7 @@ signals:
     void newV_MAX(int);
     void newS_MAX(int);
     void calibQuit();
+    void calibUpdate();
 
 private slots:
     void on_horizontalSliderH_Max_valueChanged(int value);
@@ -34,6 +35,7 @@ private slots:
     void on_pushButtonQuit_clicked();
     void changeColorMax();
     void changeColorMin();
+    void saveConfig();
 
 private:
     Ui::CalibrationWindow *ui;

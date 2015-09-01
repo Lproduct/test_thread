@@ -19,7 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->spinBoxbeta, SIGNAL(valueChanged(int)), this, SLOT(spinBoxbeta_valueChanged()));
     connect(mThread, SIGNAL(ballCoordinate(QString)), this, SLOT(setTextBallCoordinate(QString)));
 
-    calibWin = new CalibrationWindow();
+    disCalWin = new DisplayCalibWin();
+    connect(mThread, SIGNAL(imageChangeThreshold(cv::Mat)), disCalWin, SLOT(displayImage(cv::Mat)));
+
+    calibWin = new CalibrationWindow(disCalWin);
     connect(calibWin, SIGNAL(newH_MAX(int)), mThread, SLOT(setH_MAX(int)));
     connect(calibWin, SIGNAL(newH_MIN(int)), mThread, SLOT(setH_MIN(int)));
     connect(calibWin, SIGNAL(newS_MAX(int)), mThread, SLOT(setS_MAX(int)));
@@ -27,6 +30,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(calibWin, SIGNAL(newV_MAX(int)), mThread, SLOT(setV_MAX(int)));
     connect(calibWin, SIGNAL(newV_MIN(int)), mThread, SLOT(setV_MIN(int)));
     connect(calibWin, SIGNAL(calibQuit()), this, SLOT(winCalibQuit()));
+
+    confData = new Config();
+    setComboBoxConf();
+    connect(calibWin, SIGNAL(calibUpdate()), this, SLOT(setComboBoxConf()));
+
+    setConfigObjDetect(0);
+    connect(ui->comboBoxObjectConf, SIGNAL(currentIndexChanged(int)), this, SLOT(setConfigObjDetect(int)));
+
+    toolsWin = new Tools(this);
+    connect(ui->pushButtonTools, SIGNAL(clicked(bool)), toolsWin, SLOT(show()));
+    connect(toolsWin, SIGNAL(alphaChanged(int)), mThread, SLOT(setAlpha(int)));
+    connect(toolsWin, SIGNAL(betaChanged(int)), mThread, SLOT(setBeta(int)));
 }
 
 MainWindow::~MainWindow()
@@ -34,10 +49,31 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::setComboBoxConf()
+{
+    ui->comboBoxObjectConf->clear();
+    confData->updateConf();
+    QVector<DataConf> data(confData->getConf());
+    for (int i(0); i< data.size() ;i++)
+    {
+        ui->comboBoxObjectConf->addItem(data.at(i).name);
+    }
+}
+
+void MainWindow::setConfigObjDetect(int index)
+{
+    QVector<DataConf> data(confData->getConf());
+    mThread->setHSVobjMax(Scalar(data.at(index).H_Max, data.at(index).S_Max, data.at(index).V_Max));
+    mThread->setHSVobjMin(Scalar(data.at(index).H_Min, data.at(index).S_Min, data.at(index).V_Min));
+    mThread->setObjType(data.at(index).name.toStdString());
+    mThread->setObjColor(Scalar(0,255,255));
+}
+
 void MainWindow::onImageChangedCV(cv::Mat imageCV)
 {
     qimgOriginal = cvMatToQImage(imageCV);
     ui->labelCameraViewopenCV->setPixmap(QPixmap::fromImage(qimgOriginal));
+    ui->labelCameraViewopenCV->setScaledContents(true);
 }
 
 void MainWindow::on_pushButtonGetImage_clicked()
@@ -154,16 +190,18 @@ void MainWindow::spinBoxbeta_valueChanged()
 
 void MainWindow::setTextBallCoordinate(QString txt)
 {
-    ui->plainTextEditBallCoord->appendPlainText(txt);
+    //ui->plainTextEditBallCoord->appendPlainText(txt);
 }
 
 void MainWindow::on_pushButtonCalib_clicked()
 {
+    disCalWin->show();
     calibWin->show();
     mThread->setCalibrationMode(true);
 }
 
 void MainWindow::winCalibQuit()
 {
+    disCalWin->close();
     mThread->setCalibrationMode(false);
 }

@@ -11,10 +11,10 @@ Object::Object(string name){
 
 	setType(name);
 
-    if(name=="none")
+    if(name=="calib")
     {
         //BGR value for Green:
-        setColor(Scalar(0,0,0));
+        setColor(Scalar(0,255,255));
     }
     if(name=="blue")
     {
@@ -60,17 +60,6 @@ Object::Object(string name){
 		//BGR value for Red:
 		setColor(Scalar(0,0,255));
 	}
-    if(name=="pink_sand")
-    {
-        //TODO: use "calibration mode" to find HSV min
-        //and HSV max values
-
-        setHSVmin(Scalar(0,200,0));
-        setHSVmax(Scalar(19,255,255));
-
-        //BGR value for Red:
-        setColor(Scalar(0,0,255));
-    }
 }
 
 Object::~Object(void)
