@@ -12,11 +12,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    hLine = true;
+
+    connect(ui->pushButtonGetImage, SIGNAL(pressed()), this, SLOT(on_pushButtonGetImage_clicked()));
+    connect(ui->pushButtonStop, SIGNAL(pressed()), this, SLOT(on_pushButton_clicked()));
+
     mThread = new MyThread(this);
     qRegisterMetaType< cv::Mat >("cv::Mat");
     connect(mThread, SIGNAL(imageChangeCV(cv::Mat)), this, SLOT(onImageChangedCV(cv::Mat)));
-    connect(ui->spinBoxalpha, SIGNAL(valueChanged(int)), this, SLOT(spinBoxalpha_valueChanged()));
-    connect(ui->spinBoxbeta, SIGNAL(valueChanged(int)), this, SLOT(spinBoxbeta_valueChanged()));
     connect(mThread, SIGNAL(ballCoordinate(QString)), this, SLOT(setTextBallCoordinate(QString)));
 
     disCalWin = new DisplayCalibWin();
@@ -32,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(calibWin, SIGNAL(calibQuit()), this, SLOT(winCalibQuit()));
 
     confData = new Config();
-    setComboBoxConf();
+    setComboBoxConfInit();
     connect(calibWin, SIGNAL(calibUpdate()), this, SLOT(setComboBoxConf()));
 
     setConfigObjDetect(0);
@@ -42,6 +45,22 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButtonTools, SIGNAL(clicked(bool)), toolsWin, SLOT(show()));
     connect(toolsWin, SIGNAL(alphaChanged(int)), mThread, SLOT(setAlpha(int)));
     connect(toolsWin, SIGNAL(betaChanged(int)), mThread, SLOT(setBeta(int)));
+    connect(toolsWin, SIGNAL(verticalLine()), mThread, SLOT(setVerticalLine()));
+    connect(toolsWin, SIGNAL(horizontalLine()), mThread, SLOT(setHorizontalLine()));
+
+    cntDisplay = new CountDisplay(this);
+    connect(ui->pushButtonCount, SIGNAL(pressed()), cntDisplay, SLOT(show()));
+    //connect(mThread, SIGNAL(objNumber(int)), cntDisplay, SLOT(valueChange(int)));
+    //connect(mThread, SIGNAL(addObjectToCount()), cntDisplay, SLOT(setCountingObj()));
+    connect(mThread, SIGNAL(countAB(int)), cntDisplay, SLOT(valueChangeAB(int)));
+    connect(mThread, SIGNAL(countBA(int)), cntDisplay, SLOT(valueChangeBA(int)));
+    qRegisterMetaType< Count >("Count");
+    connect(mThread, SIGNAL(count(Count)), cntDisplay, SLOT(valueChange(Count)));
+    connect(toolsWin, SIGNAL(signalLeftRight()), cntDisplay, SLOT(countUDLR()));
+    connect(toolsWin, SIGNAL(signalUpDown()), cntDisplay, SLOT(countUDLR()));
+    connect(toolsWin, SIGNAL(signalDownUp()), cntDisplay, SLOT(countDURL()));
+    connect(toolsWin, SIGNAL(signalRightLeft()), cntDisplay, SLOT(countDURL()));
+    connect(toolsWin, SIGNAL(clearCount()), mThread, SLOT(clearCount()));
 }
 
 MainWindow::~MainWindow()
@@ -49,19 +68,27 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::setComboBoxConfInit()
+{
+    confData->updateConf();
+    //add new items
+    QVector<DataConf> data(confData->getConf());
+    for (int j(0); j< data.size() ;j++)
+    {
+        ui->comboBoxObjectConf->addItem(data.at(j).name);
+    }
+}
+
 void MainWindow::setComboBoxConf()
 {
-    ui->comboBoxObjectConf->clear();
     confData->updateConf();
     QVector<DataConf> data(confData->getConf());
-    for (int i(0); i< data.size() ;i++)
-    {
-        ui->comboBoxObjectConf->addItem(data.at(i).name);
-    }
+    ui->comboBoxObjectConf->addItem(data.at(data.size()-1).name);
 }
 
 void MainWindow::setConfigObjDetect(int index)
 {
+    confData->updateConf();
     QVector<DataConf> data(confData->getConf());
     mThread->setHSVobjMax(Scalar(data.at(index).H_Max, data.at(index).S_Max, data.at(index).V_Max));
     mThread->setHSVobjMin(Scalar(data.at(index).H_Min, data.at(index).S_Min, data.at(index).V_Min));
@@ -177,16 +204,6 @@ QImage MainWindow::cvMatToQImage( const cv::Mat &inMat )
       return QImage();
    }
 ////////////////////////////////////////////////////////////////////////////////////////
-
-void MainWindow::spinBoxalpha_valueChanged()
-{
-    mThread->setAlpha(ui->spinBoxalpha->value());
-}
-
-void MainWindow::spinBoxbeta_valueChanged()
-{
-    mThread->setBeta(ui->spinBoxbeta->value());
-}
 
 void MainWindow::setTextBallCoordinate(QString txt)
 {

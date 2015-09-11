@@ -8,6 +8,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <cvblob.h>
 
 #ifdef _MSC_VER // is Microsoft compiler?
 #   if _MSC_VER < 1300  // is 'old' VC 6 compiler?
@@ -48,6 +49,8 @@ MyThread::MyThread(QObject *parent) : QThread(parent)
     objdetect.setColor(Scalar(0,0,0));
     objdetect.setHSVmax(Scalar(0,0,0));
     objdetect.setHSVmin(Scalar(0,0,0));
+
+    partCount = new ParticleCounting();
 }
 
 void MyThread::run()
@@ -195,95 +198,6 @@ cv::Mat MyThread::imageProcessing(cv::Mat &image)
 
     src = imageAB;
 
-    /////////////////Algo 1//////////////
-/*
-    cv::Mat matProcessed;
-    cv::GaussianBlur(imageAB, matProcessed, cv::Size(5, 5), 2.0);
-
-    cv::inRange(matProcessed, cv::Scalar(0, 0, 175), cv::Scalar(100, 100, 256), matProcessed);
-
-    cv::GaussianBlur(matProcessed, matProcessed, cv::Size(5, 5), 2.0);
-
-    cv::dilate(matProcessed, matProcessed, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)));		// close image (dilate, then erode)
-    cv::erode(matProcessed, matProcessed, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)));		// closing "closes" (i.e. fills in) foreground gaps
-
-    std::vector<cv::Vec3f> v3fCircles;                                                                              // declare circles variable
-    cv::HoughCircles(matProcessed, v3fCircles, CV_HOUGH_GRADIENT, 2, matProcessed.rows / 4, 100, 50, 10, 400);      // fill variable circles with all circles in the processed image
-
-    for(unsigned int i = 0; i < v3fCircles.size(); i++)
-    {                                                                                       // for each circle
-        emit ballCoordinate(QString("ball position x =") + QString::number(v3fCircles[i][0]).rightJustified(4, ' ') +              // print ball position and radius
-                                                                         QString(", y =") + QString::number(v3fCircles[i][1]).rightJustified(4, ' ') +
-                                                                         QString(", radius =") + QString::number(v3fCircles[i][2], 'f', 3).rightJustified(7, ' '));
-
-        cv::circle(imageAB, cv::Point((int)v3fCircles[i][0], (int)v3fCircles[i][1]), 3, cv::Scalar(0, 255, 0), CV_FILLED);                  // draw small green circle at center of detected object
-        cv::circle(imageAB, cv::Point((int)v3fCircles[i][0], (int)v3fCircles[i][1]), (int)v3fCircles[i][2], cv::Scalar(0, 0, 255), 3);      // draw red circle around the detected object
-    }
-*/
-    /////////////////////////////////////
-
-   /////////////////Algo 2///////////////
-/*
-    //Convert to HSV
-    CvSize size = cvGetSize(imageAB);
-    IplImage *hsv = cvCreateImage(size, IPL_DEPTH_8U, 3);
-    cvCvtColor(imageAB, hsv, CV_BGR2HSV);
-    //return hsv;
-
-    //Generate mask
-    CvMat *mask = cvCreateMat(size.height, size.width, CV_8UC1);
-    cvInRangeS(hsv, cvScalar(0.11*256, 0.60*256, 0.20*256, 0),
-                    cvScalar(0.14*256, 1.00*256, 1.00*256, 0), mask);
-    cvReleaseImage(&hsv);
-    //IplImage *tmp = cvCreateImage(size, 8, 1);
-    //cvCopy(mask, tmp, NULL);
-    //return mask;
-
-    //Perform morphological ops
-    IplConvKernel *se21 = cvCreateStructuringElementEx(21, 21, 10, 10, CV_SHAPE_RECT, NULL);
-    IplConvKernel *se11 = cvCreateStructuringElementEx(11, 11, 5,  5,  CV_SHAPE_RECT, NULL);
-    cvClose(mask, mask, se21);
-    cvOpen(mask, mask, se11);
-    cvReleaseStructuringElement(&se21);
-    cvReleaseStructuringElement(&se11);
-    //IplImage *tmp = cvCreateImage(size, 8, 1);
-    //cvCopy(mask, tmp, NULL);
-    //return mask;
-
-    //Hough transform
-    IplImage *hough_in = cvCreateImage(size, 8, 1);
-    cvCopy(mask, hough_in, NULL);
-
-    print_time("Finding hough circles");
-    CvMemStorage *storage = cvCreateMemStorage(0);
-        cvSmooth(hough_in, hough_in, CV_GAUSSIAN, 15, 15, 0, 0);
-    CvSeq *circles = cvHoughCircles(
-        hough_in, storage, // input, storage,
-        CV_HOUGH_GRADIENT, 4, size.height/10,
-                           // type, 1/scale, min center dists
-        100, 40,           // params1?, param2?
-        0, 0               // min radius, max radius
-    );
-    cvReleaseMemStorage(&storage);
-
-    //Fancy up output
-    print_time("Generating output");
-    int i;
-    for (i = 0; i < circles->total; i++) {
-             float *p = (float*)cvGetSeqElem(circles, i);
-         CvPoint center = cvPoint(cvRound(p[0]),cvRound(p[1]));
-         CvScalar val = cvGet2D(mask, center.y, center.x);
-         if (val.val[0] < 1) continue;
-             cvCircle(img,  center, 3,             CV_RGB(0,255,0), -1, CV_AA, 0);
-             cvCircle(img,  center, cvRound(p[2]), CV_RGB(255,0,0),  3, CV_AA, 0);
-             cvCircle(mask, center, 3,             CV_RGB(0,255,0), -1, CV_AA, 0);
-             cvCircle(mask, center, cvRound(p[2]), CV_RGB(255,0,0),  3, CV_AA, 0);
-    }
-*/
-    /////////////////////////////////////
-
-    ////////////////Algo 3///////////////
-
     if(calibrationMode == true)
     {
         //need to find the appropriate color range values
@@ -293,7 +207,7 @@ cv::Mat MyThread::imageProcessing(cv::Mat &image)
         cvtColor(imageAB,HSV,COLOR_BGR2HSV);
         inRange(HSV,Scalar(H_MIN,S_MIN,V_MIN),Scalar(H_MAX,S_MAX,V_MAX),threshold);
         morphOps(threshold);
-        //imshow("Thresholded Image",threshold);
+
         emit imageChangeThreshold(threshold);
 
         //the folowing for canny edge detec
@@ -315,7 +229,16 @@ cv::Mat MyThread::imageProcessing(cv::Mat &image)
         cvtColor(imageAB,HSV,COLOR_BGR2HSV);
         inRange(HSV,objdetect.getHSVmin(),objdetect.getHSVmax(),threshold);
         morphOps(threshold);
-        trackFilteredObject(objdetect,threshold,HSV,imageAB);
+        //trackFilteredObject(objdetect,threshold,HSV,imageAB);
+        trackFilteredObjectcvBlob(objdetect,threshold,HSV,imageAB);
+
+        partCount->setInput(imageAB);
+        partCount->setTracks(tracks);
+        partCount->process();        
+
+        emit count(partCount->getCount());
+        //emit countAB(partCount->getCountAB());
+        //emit countBA(partCount->getCountBA());
     }
 
     /////////////////////////////////////
@@ -338,9 +261,39 @@ void MyThread::morphOps(cv::Mat &thresh)
     dilate(thresh,thresh,dilateElement);
 }
 
+void MyThread::trackFilteredObjectcvBlob(Object theObject, cv::Mat threshold, cv::Mat HSV, cv::Mat &cameraFeed)
+{
+    int minArea = 10;
+    int maxArea = 1000000;
+
+    IplImage* frame = new IplImage(cameraFeed);
+    cvConvertScale(frame, frame, 1, 0);
+
+    IplImage* labelImg = cvCreateImage(cvGetSize(frame), IPL_DEPTH_LABEL, 1);
+    IplImage* segmentated = new IplImage(threshold);
+
+    cvb::CvBlobs blobs;
+    unsigned int result = cvb::cvLabel(segmentated, labelImg, blobs);
+
+    cvb::cvFilterByArea(blobs, minArea, maxArea);
+
+    cvb::cvRenderBlobs(labelImg, blobs, frame, frame, CV_BLOB_RENDER_BOUNDING_BOX|CV_BLOB_RENDER_CENTROID|CV_BLOB_RENDER_ANGLE|CV_BLOB_RENDER_TO_STD);
+
+    cvb::cvUpdateTracks(blobs, tracks, 200., 5);
+
+    cvb::cvRenderTracks(tracks, frame, frame, CV_TRACK_RENDER_ID|CV_TRACK_RENDER_BOUNDING_BOX|CV_TRACK_RENDER_TO_STD);
+
+    cv::Mat img_result(frame);
+    img_result.copyTo(cameraFeed);
+
+    cvReleaseImage(&labelImg);
+    delete frame;
+    delete segmentated;
+    cvReleaseBlobs(blobs);
+}
+
 void MyThread::trackFilteredObject(Object theObject, cv::Mat threshold, cv::Mat HSV, cv::Mat &cameraFeed)
 {
-
     vector <Object> objects;
     Mat temp;
     threshold.copyTo(temp);
@@ -355,6 +308,7 @@ void MyThread::trackFilteredObject(Object theObject, cv::Mat threshold, cv::Mat 
     if (hierarchy.size() > 0)
     {
         int numObjects = hierarchy.size();
+        emit objNumber(numObjects);
         //if number of objects greater than MAX_NUM_OBJECTS we have a noisy filter
         if(numObjects < MAX_NUM_OBJECTS)
         {
@@ -388,6 +342,14 @@ void MyThread::trackFilteredObject(Object theObject, cv::Mat threshold, cv::Mat 
             {
                 //draw object location on screen
                 drawObject(objects,cameraFeed,temp,contours,hierarchy);
+
+                for (int i(0); i<objects.size(); i++)
+                {
+                    if(objects.at(i).getYPos() < 600 && objects.at(i).getXPos() > 550)
+                    {
+                        emit addObjectToCount();
+                    }
+                }
             }
         }
         else putText(cameraFeed, "TOO MUCH NOISE! ADJUST FILTER", Point(0,50), 1, 2, Scalar(0,0,255), 2);
@@ -513,6 +475,30 @@ void MyThread::setObjType(std::string type)
     QMutex mutex;
     mutex.lock();
     objdetect.setType(type);
+    mutex.unlock();
+}
+
+void MyThread::setVerticalLine()
+{
+    QMutex mutex;
+    mutex.lock();
+    partCount->setLineVertical();
+    mutex.unlock();
+}
+
+void MyThread::setHorizontalLine()
+{
+    QMutex mutex;
+    mutex.lock();
+    partCount->setLineHorizontal();
+    mutex.unlock();
+}
+
+void MyThread::clearCount()
+{
+    QMutex mutex;
+    mutex.lock();
+    partCount->clearCount();
     mutex.unlock();
 }
 

@@ -9,6 +9,7 @@
 #include "displaycalibwin.h"
 #include "config.h"
 #include "tools.h"
+#include "countdisplay.h"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -29,6 +30,7 @@ public:
     DisplayCalibWin* disCalWin;
     Config* confData;
     Tools* toolsWin;
+    CountDisplay* cntDisplay;
 
 public slots:
     void onImageChangedCV(cv::Mat imageCV);
@@ -36,11 +38,10 @@ public slots:
 private slots:
     void on_pushButtonGetImage_clicked();
     void on_pushButton_clicked();
-    void spinBoxalpha_valueChanged();
-    void spinBoxbeta_valueChanged();
     void setTextBallCoordinate(QString txt);
     void on_pushButtonCalib_clicked();
     void winCalibQuit();
+    void setComboBoxConfInit();
     void setComboBoxConf();
     void setConfigObjDetect(int index);
 
@@ -59,6 +60,8 @@ private:
     cv::Mat matOriginal;                    // original image
     cv::Mat matProcessed;                   // processed image
     QImage qimgProcessed;
+
+    bool hLine;
 
     cv::Mat QImageToCvMat( const QImage &inImage, bool inCloneImageData = true );
     QImage cvMatToQImage( const cv::Mat &inMat );

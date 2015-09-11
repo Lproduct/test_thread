@@ -8,6 +8,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <qmetatype.h>
+#include "cvblob.h"
+#include "particlecounting.h"
 
 class MyThread : public QThread
 {
@@ -28,23 +30,32 @@ public slots:
     void setH_MAX(int value);
     void setS_MAX(int value);
     void setV_MAX(int value);
+    void setVerticalLine();
+    void setHorizontalLine();
     void setCalibrationMode(bool state);
     void setHSVobjMax(Scalar config);
     void setHSVobjMin(Scalar config);
     void setObjColor(Scalar config);
     void setObjType(std::string type);
+    void clearCount();
 
 signals:
     void imageChange(unsigned char*);
     void imageChangeCV(cv::Mat);
     void ballCoordinate(QString);
     void imageChangeThreshold(cv::Mat);
+    void objNumber(int);
+    void addObjectToCount();
+    void countAB(int);
+    void countBA(int);
+    void count(Count);
 
 private:
     cv::Mat QImageToCvMat( const QImage &inImage, bool inCloneImageData = true );
     cv::Mat imageProcessing(cv::Mat &image);
     void morphOps(cv::Mat &thresh);
     void trackFilteredObject(Object theObject,cv::Mat threshold,cv::Mat HSV, cv::Mat &cameraFeed);
+    void trackFilteredObjectcvBlob(Object theObject, cv::Mat threshold, cv::Mat HSV, cv::Mat &cameraFeed);
     void drawObject(vector<Object> theObjects,cv::Mat &frame, cv::Mat &temp, vector< vector<Point> > contours, vector<Vec4i> hierarchy);
     string intToString(int number);
 
@@ -73,6 +84,9 @@ private:
     int V_MAX;
 
     Object objdetect;
+
+    cvb::CvTracks tracks;
+    ParticleCounting* partCount;
 
     bool calibrationMode;
 };

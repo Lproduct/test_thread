@@ -15,26 +15,31 @@ TEMPLATE = app
 SOURCES += main.cpp\
     mainwindow.cpp \
     mythread.cpp \
-    threadic.cpp \
     Object.cpp \
     calibrationwindow.cpp \
     displaycalibwin.cpp \
     config.cpp \
-    tools.cpp
+    tools.cpp \
+    countdisplay.cpp \
+    blobtracking.cpp \
+    particlecounting.cpp
 
 HEADERS  += mainwindow.h \
     mythread.h \
-    threadic.h \
     Object.h \
     calibrationwindow.h \
     displaycalibwin.h \
     config.h \
-    tools.h
+    tools.h \
+    countdisplay.h \
+    blobtracking.h \
+    particlecounting.h
 
 FORMS    += mainwindow.ui \
     calibrationwindow.ui \
     displaycalibwin.ui \
-    tools.ui
+    tools.ui \
+    countdisplay.ui
 
 INCLUDEPATH += C:\\mvIMPACT_Acquire
 
@@ -65,6 +70,11 @@ LIBS += -LC:\\Users\\User\\Lvil\\Work\\AIEA_Camera\\mybuild2\\lib\\Debug \
 -lopencv_ts2411d \
 -lopencv_video2411d \
 -lopencv_videostab2411d
+
+INCLUDEPATH += C:\\cvblob\\cvblob
+
+LIBS += -LC:\\cvblob\\build\\lib\\Debug \
+-lcvblob
 
 RESOURCES += \
     image.qrc

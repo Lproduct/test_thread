@@ -6,91 +6,222 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>536</width>
-    <height>149</height>
+    <width>587</width>
+    <height>303</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Tools</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="image.qrc">
+    <normaloff>:/image/service-512.png</normaloff>:/image/service-512.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout" rowstretch="0,1,0,1,0" rowminimumheight="0,0,0,0,0">
-    <item row="3" column="0">
-     <widget class="QSlider" name="horizontalSliderBeta">
-      <property name="minimum">
-       <number>-50</number>
-      </property>
-      <property name="maximum">
-       <number>50</number>
-      </property>
+   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+    <item row="6" column="0" colspan="2">
+     <widget class="Line" name="line">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <property name="tickPosition">
-       <enum>QSlider::TicksAbove</enum>
-      </property>
-      <property name="tickInterval">
-       <number>5</number>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Alpha:</string>
-      </property>
-     </widget>
+    <item row="13" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Counting direction :</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QRadioButton" name="radioButtonUpDown">
+            <property name="text">
+             <string>Up -&gt; Down</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroupDirUpDown</string>
+            </attribute>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonLeftRight">
+            <property name="text">
+             <string>Left -&gt; Right</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroupDirRightLeft</string>
+            </attribute>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QRadioButton" name="radioButtonDownUp">
+            <property name="text">
+             <string>Down -&gt; Up</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroupDirUpDown</string>
+            </attribute>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonRightLeft">
+            <property name="text">
+             <string>Right -&gt; Left</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroupDirRightLeft</string>
+            </attribute>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Beta</string>
-      </property>
-     </widget>
+    <item row="11" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Detection line :</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QRadioButton" name="radioButtonH">
+          <property name="text">
+           <string>Horizontal</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">buttonGroupVH</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButtonV">
+          <property name="text">
+           <string>Vertical</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">buttonGroupVH</string>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </item>
     <item row="1" column="0">
-     <widget class="QSlider" name="horizontalSliderAlpha">
-      <property name="minimum">
-       <number>-50</number>
-      </property>
-      <property name="maximum">
-       <number>50</number>
-      </property>
-      <property name="value">
-       <number>10</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="tickPosition">
-       <enum>QSlider::TicksAbove</enum>
-      </property>
-      <property name="tickInterval">
-       <number>5</number>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Alpha:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="horizontalSliderAlpha">
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>500</number>
+          </property>
+          <property name="value">
+           <number>10</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="tickPosition">
+           <enum>QSlider::TicksAbove</enum>
+          </property>
+          <property name="tickInterval">
+           <number>5</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Beta</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="horizontalSliderBeta">
+          <property name="minimum">
+           <number>-200</number>
+          </property>
+          <property name="maximum">
+           <number>200</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="tickPosition">
+           <enum>QSlider::TicksAbove</enum>
+          </property>
+          <property name="tickInterval">
+           <number>5</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <widget class="QLCDNumber" name="lcdNumberAlpha">
+          <property name="segmentStyle">
+           <enum>QLCDNumber::Flat</enum>
+          </property>
+          <property name="intValue" stdset="0">
+           <number>10</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="lcdNumberBeta">
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <property name="segmentStyle">
+           <enum>QLCDNumber::Flat</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </item>
-    <item row="1" column="1">
-     <widget class="QLCDNumber" name="lcdNumberAlpha">
-      <property name="segmentStyle">
-       <enum>QLCDNumber::Flat</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QLCDNumber" name="lcdNumberBeta">
-      <property name="frameShape">
-       <enum>QFrame::Box</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <property name="segmentStyle">
-       <enum>QLCDNumber::Flat</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
+    <item row="14" column="0" alignment="Qt::AlignRight">
      <widget class="QPushButton" name="pushButtonExit">
       <property name="text">
        <string>Exit</string>
@@ -100,39 +231,46 @@
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="image.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>horizontalSliderAlpha</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>horizontalSliderAlpha</receiver>
-   <slot>setValue(int)</slot>
+   <receiver>lcdNumberAlpha</receiver>
+   <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>222</x>
      <y>39</y>
     </hint>
     <hint type="destinationlabel">
-     <x>222</x>
-     <y>39</y>
+     <x>489</x>
+     <y>44</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>horizontalSliderBeta</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>horizontalSliderBeta</receiver>
-   <slot>setValue(int)</slot>
+   <receiver>lcdNumberBeta</receiver>
+   <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>222</x>
      <y>87</y>
     </hint>
     <hint type="destinationlabel">
-     <x>222</x>
-     <y>87</y>
+     <x>489</x>
+     <y>98</y>
     </hint>
    </hints>
   </connection>
  </connections>
+ <buttongroups>
+  <buttongroup name="buttonGroupDirRightLeft"/>
+  <buttongroup name="buttonGroupVH"/>
+  <buttongroup name="buttonGroupDirUpDown"/>
+ </buttongroups>
 </ui>

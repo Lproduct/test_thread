@@ -3,5 +3,11 @@
         <file>image/Media-play-icon.png</file>
         <file>image/pause-icon.png</file>
         <file>image/service-512.png</file>
+        <file>image/calibration-icon1.png</file>
+        <file>image/target-2-512.png</file>
+        <file>image/abacus-512.png</file>
+        <file>image/color-palette-icon.jpg</file>
+        <file>image/Color_wheel_dock_icon_by_andybaumgar-d3ezjgc.png</file>
+        <file>image/Play.png</file>
     </qresource>
 </RCC>

@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Calibration HSV threshold</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="image.qrc">
+    <normaloff>:/image/calibration-icon1.png</normaloff>:/image/calibration-icon1.png</iconset>
+  </property>
   <property name="windowOpacity">
    <double>1.000000000000000</double>
   </property>
@@ -501,7 +505,9 @@
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="image.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>horizontalSliderH_Min</sender>
