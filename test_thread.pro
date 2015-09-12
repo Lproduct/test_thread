@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     tools.cpp \
     countdisplay.cpp \
     blobtracking.cpp \
-    particlecounting.cpp
+    particlecounting.cpp \
+    devicedetection.cpp
 
 HEADERS  += mainwindow.h \
     mythread.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     tools.h \
     countdisplay.h \
     blobtracking.h \
-    particlecounting.h
+    particlecounting.h \
+    devicedetection.h
 
 FORMS    += mainwindow.ui \
     calibrationwindow.ui \

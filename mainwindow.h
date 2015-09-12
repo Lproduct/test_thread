@@ -13,6 +13,8 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <QMessageBox>
+#include <devicedetection.h>
 
 namespace Ui {
 class MainWindow;
@@ -25,12 +27,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    MyThread* mThread;
-    CalibrationWindow* calibWin;
-    DisplayCalibWin* disCalWin;
-    Config* confData;
-    Tools* toolsWin;
-    CountDisplay* cntDisplay;
+
 
 public slots:
     void onImageChangedCV(cv::Mat imageCV);
@@ -44,6 +41,9 @@ private slots:
     void setComboBoxConfInit();
     void setComboBoxConf();
     void setConfigObjDetect(int index);
+    void warningDialog(QString message);
+    void comboboxDevice(QVector<QString> devices);
+    void refreshDevices();
 
 signals:
 
@@ -65,6 +65,14 @@ private:
 
     cv::Mat QImageToCvMat( const QImage &inImage, bool inCloneImageData = true );
     QImage cvMatToQImage( const cv::Mat &inMat );
+
+    MyThread* mThread;
+    CalibrationWindow* calibWin;
+    DisplayCalibWin* disCalWin;
+    Config* confData;
+    Tools* toolsWin;
+    CountDisplay* cntDisplay;
+    DeviceDetection* device;
 };
 
 #endif // MAINWINDOW_H

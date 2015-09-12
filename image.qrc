@@ -9,5 +9,7 @@
         <file>image/color-palette-icon.jpg</file>
         <file>image/Color_wheel_dock_icon_by_andybaumgar-d3ezjgc.png</file>
         <file>image/Play.png</file>
+        <file>image/Refresh-icon.png</file>
+        <file>image/Stop-icon.png</file>
     </qresource>
 </RCC>

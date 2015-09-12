@@ -37,6 +37,7 @@ public slots:
     void setHSVobjMin(Scalar config);
     void setObjColor(Scalar config);
     void setObjType(std::string type);
+    void setDeviceNumber(int number);
     void clearCount();
 
 signals:
@@ -89,6 +90,8 @@ private:
     ParticleCounting* partCount;
 
     bool calibrationMode;
+
+    int deviceNumber;
 };
 
 #endif // MYTHREAD_H

@@ -5,6 +5,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include "qmetatype.h"
 #include "calibrationwindow.h"
+#include "devicedetection.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->pushButtonGetImage, SIGNAL(pressed()), this, SLOT(on_pushButtonGetImage_clicked()));
     connect(ui->pushButtonStop, SIGNAL(pressed()), this, SLOT(on_pushButton_clicked()));
+    connect(ui->pushButtonRefresh, SIGNAL(pressed()), this, SLOT(refreshDevices()));
 
     mThread = new MyThread(this);
     qRegisterMetaType< cv::Mat >("cv::Mat");
@@ -61,6 +63,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(toolsWin, SIGNAL(signalDownUp()), cntDisplay, SLOT(countDURL()));
     connect(toolsWin, SIGNAL(signalRightLeft()), cntDisplay, SLOT(countDURL()));
     connect(toolsWin, SIGNAL(clearCount()), mThread, SLOT(clearCount()));
+
+    device = new DeviceDetection();
+    connect(device, SIGNAL(devices(QVector<QString>)), this, SLOT(comboboxDevice(QVector<QString>)));
+    connect(device, SIGNAL(warning(QString)), this, SLOT(warningDialog(QString)));
+    refreshDevices();
 }
 
 MainWindow::~MainWindow()
@@ -106,6 +113,11 @@ void MainWindow::onImageChangedCV(cv::Mat imageCV)
 void MainWindow::on_pushButtonGetImage_clicked()
 {
     mThread->sleepTime = 0;
+    QString row(ui->comboBoxDevices->currentText());
+    int idTmp(row.indexOf("["));
+    QChar indexChar(row.at(idTmp+1));
+    int index(indexChar.digitValue());
+    mThread->setDeviceNumber(index);
     mThread->start();
 }
 
@@ -221,4 +233,25 @@ void MainWindow::winCalibQuit()
 {
     disCalWin->close();
     mThread->setCalibrationMode(false);
+}
+
+void MainWindow::warningDialog(QString message)
+{
+    ui->comboBoxDevices->clear();
+    QMessageBox msgBox(QMessageBox::Warning, "Information", message, QMessageBox::Ok, this);
+    msgBox.exec();
+}
+
+void MainWindow::comboboxDevice(QVector<QString> devices)
+{
+    ui->comboBoxDevices->clear();
+    for(int i(0); i< devices.size(); i++)
+    {
+        ui->comboBoxDevices->addItem(devices.at(i));
+    }
+}
+
+void MainWindow::refreshDevices()
+{
+    device->getDeviceFromUserInput();
 }

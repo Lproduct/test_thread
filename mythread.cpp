@@ -51,6 +51,8 @@ MyThread::MyThread(QObject *parent) : QThread(parent)
     objdetect.setHSVmin(Scalar(0,0,0));
 
     partCount = new ParticleCounting();
+
+    deviceNumber = 0;
 }
 
 void MyThread::run()
@@ -59,7 +61,7 @@ void MyThread::run()
     ////////////////////////    get an image from the camera //////////////////////////////
     //Get device
     DeviceManager devMgr;
-    Device* pDev = getDeviceFromUserInput( devMgr );
+    Device* pDev = getDeviceFromUserInput( devMgr , deviceNumber);
 
     //get image from camera
     if( !pDev )
@@ -499,6 +501,14 @@ void MyThread::clearCount()
     QMutex mutex;
     mutex.lock();
     partCount->clearCount();
+    mutex.unlock();
+}
+
+void MyThread::setDeviceNumber(int number)
+{
+    QMutex mutex;
+    mutex.lock();
+    deviceNumber = number;
     mutex.unlock();
 }
 
