@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Sand Counter</string>
+   <string>SoFTraC</string>
   </property>
   <property name="windowIcon">
    <iconset resource="image.qrc">
-    <normaloff>:/image/target-2-512.png</normaloff>:/image/target-2-512.png</iconset>
+    <normaloff>:/image/icon175x175.png</normaloff>:/image/icon175x175.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout" rowstretch="0,1,10" columnstretch="1" columnminimumwidth="0">

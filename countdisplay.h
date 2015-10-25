@@ -15,13 +15,23 @@ class CountDisplay : public QMainWindow
 public:
     explicit CountDisplay(QWidget *parent = 0);
     ~CountDisplay();
+
+signals:
+    void recordState(bool);
+
 public slots:
     void valueChangeAB(int value);
     void valueChangeBA(int value);
     void valueChange(Count count);
-    void setCountingObj();
+    void startCounting();
+    void pauseCounting();
+    void restartCounting();
     void countUDLR();
     void countDURL();
+    void countObj(int obj);
+    void timerDisplay(int val);
+    void timerControlDisplay(int val);
+    void record(bool state);
 
 private slots:
     void on_horizontalSlider_valueChanged(int value);
@@ -30,8 +40,9 @@ private slots:
 
 private:
     Ui::CountDisplay *ui;
-    int i;
     bool countWayUDLR;
+    bool startCount;
+    int objNb;
 };
 
 #endif // COUNTDISPLAY_H

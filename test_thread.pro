@@ -8,7 +8,8 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = test_thread
+TARGET = SoFTraC
+RC_FILE = icon.rc
 TEMPLATE = app
 
 

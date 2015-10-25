@@ -53,6 +53,11 @@ MyThread::MyThread(QObject *parent) : QThread(parent)
     partCount = new ParticleCounting();
 
     deviceNumber = 0;
+
+    averageValue = 1;
+
+    recordingState = false;
+    recordingDirPath = "C:/SoFTraC_REC";
 }
 
 void MyThread::run()
@@ -109,6 +114,12 @@ void MyThread::run()
     const unsigned int timeout_ms = 500;
     while( !stop )
     {
+        QTime timer;
+        timer.start();
+
+        QTime timer_2;
+        timer_2.start();
+
         // wait for results from the default capture queue
         int requestNr = fi.imageRequestWaitFor( timeout_ms );
         pRequest = fi.isRequestNrValid( requestNr ) ? fi.getRequest( requestNr ) : 0;
@@ -125,9 +136,47 @@ void MyThread::run()
                          << ", " << statistics.captureTime_s.name() << ": " << statistics.captureTime_s.readS() << endl;*/
                 }
 
+                imageCv.release();
+
+                unsigned char* pTempBufQt = new unsigned char[pRequest->imageSize.read()];
+                memcpy( pTempBufQt, pRequest->imageData.read(), pRequest->imageSize.read());
+                //get QImage from camera image
+                imageQt = QImage(pTempBufQt, pRequest->imageWidth.read(), pRequest->imageHeight.read(), QImage::Format_RGBX8888);
+
+                //get cv::Mat from camera image
+                imageQtConvert = imageQt.convertToFormat(QImage::Format_RGB32, Qt::ThresholdDither|Qt::AutoColor);
+                imageCv = QImageToCvMat(imageQtConvert);
+
+                for (int i(0); i< averageValue; i++)
+                {
+                    unsigned char* pTempBuf = new unsigned char[pRequest->imageSize.read()];
+                    memcpy( pTempBuf, pRequest->imageData.read(), pRequest->imageSize.read());
+                    //get QImage from camera image
+                    QImage imageQtTmp;
+                    imageQtTmp = QImage(pTempBuf, pRequest->imageWidth.read(), pRequest->imageHeight.read(), QImage::Format_RGBX8888);
+
+                    //get cv::Mat from camera image
+                    QImage imageQtConvertTmp;
+                    imageQtConvertTmp = imageQtTmp.convertToFormat(QImage::Format_RGB32, Qt::ThresholdDither|Qt::AutoColor);
+                    cv::Mat imageCvTmp;
+                    imageCvTmp = QImageToCvMat(imageQtConvertTmp);
+
+                    cv::addWeighted( imageCvTmp, 0.5, imageCv, 0.5, 0, imageCv);
+
+                    delete pTempBuf;
+                }
+
+                cv::cvtColor(imageCv, imageCvShare, CV_RGB2BGR);
+
+                imageProcessed = imageProcessing(imageCvShare);
+
+                emit imageChangeCV(imageProcessed);
+                delete pTempBufQt;
+
+                /*
                 //Copy data from camera image
                 unsigned char* pTempBufQt = new unsigned char[pRequest->imageSize.read()];
-                memcpy( pTempBufQt, pRequest->imageData.read(), pRequest->imageSize.read() );
+                memcpy( pTempBufQt, pRequest->imageData.read(), pRequest->imageSize.read());
 
                 //get QImage from camera image
                 imageQt = QImage(pTempBufQt, pRequest->imageWidth.read(), pRequest->imageHeight.read(), QImage::Format_RGBX8888);
@@ -146,6 +195,7 @@ void MyThread::run()
                 emit imageChangeCV(imageProcessed);
                 this->msleep(sleepTime);
                 delete pTempBufQt;
+                */
             }
             else
             {
@@ -167,6 +217,11 @@ void MyThread::run()
             cout << "imageRequestWaitFor failed (" << requestNr << ", " << ImpactAcquireException::getErrorCodeAsString( requestNr ) << ")"
                  << ", timeout value too small?" << endl;
         }
+
+        emit timerVal(timer.elapsed());
+        this->msleep((int) sleepTime - timer.elapsed());
+
+        emit timerControl(timer_2.elapsed());
     }
     manuallyStopAcquisitionIfNeeded( pDev, fi );
 
@@ -231,14 +286,14 @@ cv::Mat MyThread::imageProcessing(cv::Mat &image)
         cvtColor(imageAB,HSV,COLOR_BGR2HSV);
         inRange(HSV,objdetect.getHSVmin(),objdetect.getHSVmax(),threshold);
         morphOps(threshold);
-        //trackFilteredObject(objdetect,threshold,HSV,imageAB);
-        trackFilteredObjectcvBlob(objdetect,threshold,HSV,imageAB);
+        trackFilteredObject(objdetect,threshold,HSV,imageAB);
+        //trackFilteredObjectcvBlob(objdetect,threshold,HSV,imageAB);
 
-        partCount->setInput(imageAB);
-        partCount->setTracks(tracks);
-        partCount->process();        
+        //partCount->setInput(imageAB);
+        //partCount->setTracks(tracks);
+        //partCount->process();
 
-        emit count(partCount->getCount());
+        //emit count(partCount->getCount());
         //emit countAB(partCount->getCountAB());
         //emit countBA(partCount->getCountBA());
     }
@@ -311,6 +366,13 @@ void MyThread::trackFilteredObject(Object theObject, cv::Mat threshold, cv::Mat 
     {
         int numObjects = hierarchy.size();
         emit objNumber(numObjects);
+
+        //record images if objects found
+        if(recordingState == true)
+        {
+            QString dateTime(QDateTime::currentDateTime().toString("hh:mm:ss.zzz"));
+            cv::imwrite( recordingDirPath.toStdString() + "/Image_" + dateTime + ".jpg", temp);
+        }
         //if number of objects greater than MAX_NUM_OBJECTS we have a noisy filter
         if(numObjects < MAX_NUM_OBJECTS)
         {
@@ -509,6 +571,38 @@ void MyThread::setDeviceNumber(int number)
     QMutex mutex;
     mutex.lock();
     deviceNumber = number;
+    mutex.unlock();
+}
+
+void MyThread::setSleepTime(unsigned long msSleep)
+{
+    QMutex mutex;
+    mutex.lock();
+    sleepTime = msSleep;
+    mutex.unlock();
+}
+
+void MyThread::setAverageValue(int value)
+{
+    QMutex mutex;
+    mutex.lock();
+    averageValue = value;
+    mutex.unlock();
+}
+
+void MyThread::setRecordingSate(bool state)
+{
+    QMutex mutex;
+    mutex.lock();
+    recordingState = state;
+    mutex.unlock();
+}
+
+void MyThread::setrecordingDirPath(QString str)
+{
+    QMutex mutex;
+    mutex.lock();
+    recordingDirPath = str;
     mutex.unlock();
 }
 

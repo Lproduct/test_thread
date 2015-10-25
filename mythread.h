@@ -19,7 +19,7 @@ public:
     void run();
 
     bool stop;
-    int sleepTime;
+
 
 public slots:
     void setAlpha(int newAlpha);
@@ -39,6 +39,10 @@ public slots:
     void setObjType(std::string type);
     void setDeviceNumber(int number);
     void clearCount();
+    void setSleepTime(unsigned long msSleep);
+    void setAverageValue(int value);
+    void setRecordingSate(bool state);
+    void setrecordingDirPath(QString str);
 
 signals:
     void imageChange(unsigned char*);
@@ -50,6 +54,8 @@ signals:
     void countAB(int);
     void countBA(int);
     void count(Count);
+    void timerVal(int);
+    void timerControl(int);
 
 private:
     cv::Mat QImageToCvMat( const QImage &inImage, bool inCloneImageData = true );
@@ -92,6 +98,12 @@ private:
     bool calibrationMode;
 
     int deviceNumber;
+
+    int sleepTime;
+    int averageValue;
+
+    bool recordingState;
+    QString recordingDirPath;
 };
 
 #endif // MYTHREAD_H

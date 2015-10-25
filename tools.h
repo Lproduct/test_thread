@@ -2,6 +2,8 @@
 #define TOOLS_H
 
 #include <QMainWindow>
+#include <QFileDialog>
+#include <QSettings>
 
 namespace Ui {
 class Tools;
@@ -25,6 +27,9 @@ signals:
     void signalRightLeft();
     void signalLeftRight();
     void clearCount();
+    void speedTime(unsigned long value);
+    void imageAverageSignal(int value);
+    void fileRecPath(QString str);
 
 private slots:
     void on_horizontalSliderAlpha_valueChanged(int value);
@@ -35,6 +40,11 @@ private slots:
     void on_radioButtonDownUp_clicked();
     void on_radioButtonLeftRight_clicked();
     void on_radioButtonRightLeft_clicked();
+    void speedTimeSetting(const double &value);
+    void imageAverage(const int &value);
+
+    void on_checkBoxEnableTRackCount_clicked(bool checked);
+    void filePath();
 
 private:
     Ui::Tools *ui;

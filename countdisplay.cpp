@@ -9,10 +9,15 @@ CountDisplay::CountDisplay(QWidget *parent) :
     ui(new Ui::CountDisplay)
 {
     ui->setupUi(this);
-    i = 0;
+    objNb = 0;
     countWayUDLR = true;
+    startCount = false;
     connect(ui->horizontalSliderOpacity, SIGNAL(valueChanged(int)), this, SLOT(on_horizontalSlider_valueChanged(int)));
     connect(ui->pushButtonNumColor, SIGNAL(pressed()), this, SLOT(on_pushButton_clicked()));
+    connect(ui->pushButtonPlayCount, SIGNAL(pressed()), this, SLOT(startCounting()));
+    connect(ui->pushButtonPauseCount, SIGNAL(pressed()), this, SLOT(pauseCounting()));
+    connect(ui->pushButtonRefreshCount, SIGNAL(pressed()), this, SLOT(restartCounting()));
+    connect(ui->pushButtonRec, SIGNAL(clicked(bool)), this, SLOT(record(bool)));
 }
 
 CountDisplay::~CountDisplay()
@@ -22,23 +27,23 @@ CountDisplay::~CountDisplay()
 
 void CountDisplay::valueChangeAB(int value)
 {
-    ui->lcdNumber->display(QString::number(value));
+    //ui->lcdNumber->display(QString::number(value));
 }
 
 void CountDisplay::valueChangeBA(int value)
 {
-    ui->lcdNumber->display(QString::number(value));
+    //ui->lcdNumber->display(QString::number(value));
 }
 
 void CountDisplay::valueChange(Count count)
 {
     if(countWayUDLR == true)
     {
-        ui->lcdNumber->display(QString::number(count.countAB));
+        //ui->lcdNumber->display(QString::number(count.countAB));
     }
     else if(countWayUDLR == false)
     {
-        ui->lcdNumber->display(QString::number(count.countBA));
+        //ui->lcdNumber->display(QString::number(count.countBA));
     }
 }
 
@@ -65,7 +70,55 @@ void CountDisplay::countDURL()
     countWayUDLR = false;
 }
 
-void CountDisplay::setCountingObj()
+void CountDisplay::startCounting()
 {
-    i++;
+    startCount = true;
+}
+
+void CountDisplay::pauseCounting()
+{
+    startCount = false;
+}
+
+void CountDisplay::restartCounting()
+{
+    objNb = 0;
+}
+
+void CountDisplay::countObj(int obj)
+{
+    ui->lcdNumber_2->display(QString::number(obj));
+
+    if (startCount == true)
+    {
+        objNb += obj;
+    }
+    else {}
+
+    ui->lcdNumber->display(QString::number(objNb));
+}
+
+void CountDisplay::timerDisplay(int val)
+{
+    ui->labelTimer->setText(QString::number(val));
+}
+
+void CountDisplay::timerControlDisplay(int val)
+{
+    ui->labelTimerControl->setText(QString::number(val));
+}
+
+void CountDisplay::record(bool state)
+{
+    if(state == true)
+    {
+        emit recordState(true);
+        ui->pushButtonRec->setChecked(true);
+    }
+
+    else if(state == false)
+    {
+        emit recordState(false);
+        ui->pushButtonRec->setChecked(false);
+    }
 }

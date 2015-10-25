@@ -19,7 +19,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="tabPosition">
        <enum>QTabWidget::East</enum>
@@ -53,11 +53,11 @@
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>Number</string>
+        <string>Count</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout">
+        <item row="2" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,0">
           <item>
            <widget class="QLCDNumber" name="lcdNumber">
             <property name="segmentStyle">
@@ -65,7 +65,110 @@
             </property>
            </widget>
           </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,1">
+            <item alignment="Qt::AlignLeft">
+             <widget class="QPushButton" name="pushButtonPlayCount">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="image.qrc">
+                <normaloff>:/image/Play.png</normaloff>:/image/Play.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item alignment="Qt::AlignLeft">
+             <widget class="QPushButton" name="pushButtonPauseCount">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="image.qrc">
+                <normaloff>:/image/pause-icon.png</normaloff>:/image/pause-icon.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item alignment="Qt::AlignLeft">
+             <widget class="QPushButton" name="pushButtonRefreshCount">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="image.qrc">
+                <normaloff>:/image/Refresh-icon.png</normaloff>:/image/Refresh-icon.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButtonRec">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="image.qrc">
+                <normaloff>:/image/Icons-Land-Play-Stop-Pause-Record-Pressed.ico</normaloff>
+                <normalon>:/image/stop-normal-red.ico</normalon>:/image/Icons-Land-Play-Stop-Pause-Record-Pressed.ico</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <property name="autoDefault">
+               <bool>false</bool>
+              </property>
+              <property name="default">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelTimer">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelTimerControl">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
          </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>Static</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLCDNumber" name="lcdNumber_2"/>
         </item>
        </layout>
       </widget>

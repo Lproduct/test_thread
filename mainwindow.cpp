@@ -49,10 +49,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(toolsWin, SIGNAL(betaChanged(int)), mThread, SLOT(setBeta(int)));
     connect(toolsWin, SIGNAL(verticalLine()), mThread, SLOT(setVerticalLine()));
     connect(toolsWin, SIGNAL(horizontalLine()), mThread, SLOT(setHorizontalLine()));
-
+    connect(toolsWin, SIGNAL(speedTime(ulong)), mThread, SLOT(setSleepTime(ulong)));
+    connect(toolsWin, SIGNAL(imageAverageSignal(int)), mThread, SLOT(setAverageValue(int)));
+    connect(toolsWin, SIGNAL(fileRecPath(QString)), mThread, SLOT(setrecordingDirPath(QString)));
+    
     cntDisplay = new CountDisplay(this);
     connect(ui->pushButtonCount, SIGNAL(pressed()), cntDisplay, SLOT(show()));
-    //connect(mThread, SIGNAL(objNumber(int)), cntDisplay, SLOT(valueChange(int)));
+    connect(mThread, SIGNAL(objNumber(int)), cntDisplay, SLOT(countObj(int)));
     //connect(mThread, SIGNAL(addObjectToCount()), cntDisplay, SLOT(setCountingObj()));
     connect(mThread, SIGNAL(countAB(int)), cntDisplay, SLOT(valueChangeAB(int)));
     connect(mThread, SIGNAL(countBA(int)), cntDisplay, SLOT(valueChangeBA(int)));
@@ -63,6 +66,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(toolsWin, SIGNAL(signalDownUp()), cntDisplay, SLOT(countDURL()));
     connect(toolsWin, SIGNAL(signalRightLeft()), cntDisplay, SLOT(countDURL()));
     connect(toolsWin, SIGNAL(clearCount()), mThread, SLOT(clearCount()));
+    connect(mThread, SIGNAL(timerVal(int)), cntDisplay, SLOT(timerDisplay(int)));
+    connect(mThread, SIGNAL(timerControl(int)), cntDisplay, SLOT(timerControlDisplay(int)));
+    connect(cntDisplay, SIGNAL(recordState(bool)), mThread, SLOT(setRecordingSate(bool)));
 
     device = new DeviceDetection();
     connect(device, SIGNAL(devices(QVector<QString>)), this, SLOT(comboboxDevice(QVector<QString>)));
@@ -112,7 +118,7 @@ void MainWindow::onImageChangedCV(cv::Mat imageCV)
 
 void MainWindow::on_pushButtonGetImage_clicked()
 {
-    mThread->sleepTime = 0;
+    mThread->setSleepTime(1000);
     QString row(ui->comboBoxDevices->currentText());
     int idTmp(row.indexOf("["));
     QChar indexChar(row.at(idTmp+1));
@@ -255,3 +261,4 @@ void MainWindow::refreshDevices()
 {
     device->getDeviceFromUserInput();
 }
+

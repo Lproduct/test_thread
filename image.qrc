@@ -11,5 +11,8 @@
         <file>image/Play.png</file>
         <file>image/Refresh-icon.png</file>
         <file>image/Stop-icon.png</file>
+        <file>image/icon175x175.png</file>
+        <file>image/Icons-Land-Play-Stop-Pause-Record-Pressed.ico</file>
+        <file>image/stop-normal-red.ico</file>
     </qresource>
 </RCC>

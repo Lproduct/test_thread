@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>587</width>
-    <height>303</height>
+    <height>445</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,22 +18,33 @@
     <normaloff>:/image/service-512.png</normaloff>:/image/service-512.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
-    <item row="6" column="0" colspan="2">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+    <item row="21" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Camera acquiring image speed</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignRight">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Image Average</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="11" column="0">
+     <widget class="QCheckBox" name="checkBoxEnableTRackCount">
+      <property name="text">
+       <string>Enable tracking count</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="Line" name="line_2">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="13" column="0">
+    <item row="17" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
        <widget class="QLabel" name="label_4">
@@ -96,40 +107,74 @@
       </item>
      </layout>
     </item>
-    <item row="11" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item row="10" column="0">
+     <widget class="Line" name="line_4">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLineEdit" name="lineEditFilePath"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonBrowse">
         <property name="text">
-         <string>Detection line :</string>
+         <string>Browse...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="22" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1,0,0">
+      <item alignment="Qt::AlignLeft">
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxImageSpeed">
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>s</string>
         </property>
        </widget>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QRadioButton" name="radioButtonH">
-          <property name="text">
-           <string>Horizontal</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">buttonGroupVH</string>
-          </attribute>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButtonV">
-          <property name="text">
-           <string>Vertical</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">buttonGroupVH</string>
-          </attribute>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QSpinBox" name="spinBoxImageAverage">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>20</number>
+        </property>
+        <property name="value">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
       </item>
      </layout>
+    </item>
+    <item row="23" column="0" alignment="Qt::AlignRight">
+     <widget class="QPushButton" name="pushButtonExit">
+      <property name="text">
+       <string>Exit</string>
+      </property>
+     </widget>
     </item>
     <item row="1" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -221,10 +266,66 @@
       </item>
      </layout>
     </item>
-    <item row="14" column="0" alignment="Qt::AlignRight">
-     <widget class="QPushButton" name="pushButtonExit">
+    <item row="15" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Detection line :</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QRadioButton" name="radioButtonH">
+          <property name="text">
+           <string>Horizontal</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">buttonGroupVH</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButtonV">
+          <property name="text">
+           <string>Vertical</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">buttonGroupVH</string>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item row="18" column="0">
+     <widget class="Line" name="line_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0" colspan="2">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="label_9">
       <property name="text">
-       <string>Exit</string>
+       <string>Record file path:</string>
       </property>
      </widget>
     </item>
