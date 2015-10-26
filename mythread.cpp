@@ -370,8 +370,13 @@ void MyThread::trackFilteredObject(Object theObject, cv::Mat threshold, cv::Mat 
         //record images if objects found
         if(recordingState == true)
         {
-            QString dateTime(QDateTime::currentDateTime().toString("hh:mm:ss.zzz"));
-            cv::imwrite( recordingDirPath.toStdString() + "/Image_" + dateTime + ".jpg", temp);
+            QString dateTime(QDateTime::currentDateTime().toString("hh_mm_ss_zzz"));
+            std::string filePath(recordingDirPath.toStdString() + "/Image_" + dateTime.toStdString() + ".jpg");
+            if (QDir(recordingDirPath).exists() == false)
+            {
+                QDir().mkdir(recordingDirPath);
+            }
+            cv::imwrite(filePath , cameraFeed);
         }
         //if number of objects greater than MAX_NUM_OBJECTS we have a noisy filter
         if(numObjects < MAX_NUM_OBJECTS)
@@ -417,6 +422,10 @@ void MyThread::trackFilteredObject(Object theObject, cv::Mat threshold, cv::Mat 
             }
         }
         else putText(cameraFeed, "TOO MUCH NOISE! ADJUST FILTER", Point(0,50), 1, 2, Scalar(0,0,255), 2);
+    }
+    else if (hierarchy.size() == 0)
+    {
+        emit objNumber(0);
     }
 }
 
